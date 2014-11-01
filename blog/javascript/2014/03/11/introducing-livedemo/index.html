@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple web demos with livedemo | Taye Adeyemi</title>
+        <meta name="author" content="Taye Adeyemi" />
+        <meta name="keywords" content="javascript demos" />
+    
+        <meta name="description" content="takes the text out of highlighted <code> snippets and adds elements and CSS to the DOM and executes JS code." />
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml"/>
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/blog/css/syntax.css"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/blog/css/normalize.css"/>
+        <link rel="stylesheet" href="/blog/css/taye.css"/>
+        <link rel="icon" href="/blog/img/hm-64.png"/>
+
+
+
+        <script src="/blog/js/livedemoj.js"></script>
+
+    </head>
+    <body>
+
+        <div class="site">
+          <header>
+              <h1 class="title"><a href="/blog">Here I am</a></h1>
+              <a class="extra" href="/blog">home</a>
+          </header>
+
+          <div class="post-title">
+    <h1> Simple web demos with livedemo </h1>
+    <p class="meta">
+        11 Mar 2014
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="TayeAdeyemi">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </p>
+</div>
+
+<article class="post">
+    <p><script src="/projects/livedemo/livedemo.js"></script></p>
+
+<p><a href="https://github.com/taye/livedemo" title="livedemo on Github">livedemo.js</a> is a small script I wrote to make writing HTML, CSS
+and JavaScript demos easier. It takes the text out of highlighted <code>&lt;code&gt;</code>
+snippets and adds elements and CSS to the DOM and executes JS code.</p>
+
+<p>I initially wrote it for <a href="http://taye.me/blog/svg/a-guide-to-svg-use-elements/" title="A guide to SVG &lt;use&gt; elements">this blog post</a> and I use it on
+<a href="http://interactjs.io" title="interact.js drag, drop, resize, gesture">interactjs.io</a>.</p>
+
+<h2 id="use-it">Use it</h2>
+
+<ol>
+<li><p>Add a comment that contains the text <code>enable javascript</code> as the first,
+unindented line in code that you want to demo.</p></li>
+<li><p>Highlight code in your HTML page with something like
+<a href="https://github.com/vmg/redcarpet" title="The safe Markdown parser, reloaded"><em>redcarpet</em></a> or <a href="http://pygments.org" title="Python syntax highlighter"><em>Pygments</em></a> (both available in
+<a href="http://jekyllrb.com" title="Simple, blog-aware, static sites"><em>Jekyll</em></a>) or <a href="http://prismjs.com" title="A lightweight, extensible syntax highlighter"><em>Prism</em></a>.</p></li>
+<li><p><a href="https://raw2.github.com/taye/livedemo/master/livedemo.min.js" title="minified script">Download</a> and include the script somewhere in your HTML page:
+<code>&lt;script src=&quot;livedemo.min.js&quot;&gt;&lt;/script&gt;</code> (after Prisim if you&#39;re using it).</p></li>
+</ol>
+
+<p><hr></p>
+
+<h2 id="html">HTML</h2>
+
+<p>Code elements matching the <code>HTMLSelector</code> and whose first <code>textNode</code>&#39;s
+<code>textContent</code> match the <code>HTMLFlag</code> RegExp will be demo&#39;d.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">id=</span><span class="s">&quot;demo-svg&quot;</span> <span class="na">viewBox=</span><span class="s">&quot;0 -50 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;polygon</span> <span class="na">points=</span><span class="s">&quot;80 -40, 120 40, 40 40&quot;</span> <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;rect</span> <span class="na">height=</span><span class="s">&quot;80&quot;</span> <span class="na">width=</span><span class="s">&quot;80&quot;</span> <span class="na">y=</span><span class="s">&quot;-40&quot;</span> <span class="na">x=</span><span class="s">&quot;160&quot;</span> <span class="na">fill=</span><span class="s">&quot;#4e4&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;circle</span> <span class="na">cx=</span><span class="s">&quot;320&quot;</span> <span class="na">cy=</span><span class="s">&quot;0&quot;</span> <span class="na">r=</span><span class="s">&quot;40&quot;</span> <span class="na">fill=</span><span class="s">&quot;#f40&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<p><code>&lt;!-- enable javascript to view a demo --&gt;</code> will be noticed by <em>livedemo</em>. The
+comment is removed and the remaining content is inserted into the document
+beside the code element&#39;s parent&#39;s parent by default.</p>
+
+<p>If for example the HTML on the page is</p>
+
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;pre&gt;</span>
+        <span class="nt">&lt;code</span> <span class="na">class=</span><span class="s">&quot;language-html&quot;</span><span class="nt">&gt;</span>
+            ... the generated highlighted code ...
+        <span class="nt">&lt;/code&gt;</span>
+    <span class="nt">&lt;pre&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div>
+
+<p>then the textContent of the <code>&lt;code&gt;</code> will be inserted after the <code>&lt;/div&gt;</code> within
+a new <code>div.live-demo</code> element.</p>
+
+<p>This makes it convenient for <em>Jekyll</em> sites using <em>redcarpet</em> or <em>Pygments</em>.</p>
+
+<h2 id="css">CSS</h2>
+
+<p>The text of code elements that match the <code>CSSSelector</code> and have <code>firstChild</code>ren
+that match the <code>CSSFlag</code> RegExp will be added to <code>document.head</code> in <code>&lt;script&gt;</code>
+tags.</p>
+
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="c">/* enable javascript to vew demo */</span>
+<span class="nf">#demo-svg</span> <span class="p">{</span>
+    <span class="k">width</span><span class="o">:</span> <span class="m">100%</span><span class="p">;</span>
+    <span class="k">height</span><span class="o">:</span> <span class="m">25%</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="javascript">JavaScript</h2>
+
+<p>Elements that match the <code>JSSelector</code> and whose <code>firstChild</code>&#39;s <code>textContent</code>
+matches the <code>JSFlag</code> RegExp will have their text executed.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">// please enable javascript</span>
+<span class="kd">var</span> <span class="nx">demoSvg</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;demo-svg&#39;</span><span class="p">);</span>
+
+<span class="nx">demoSvg</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;click on &lt;&#39;</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">nodeName</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>The script above will be executed and the flag comment will be removed form the
+<code>&lt;code&gt;</code> block.</p>
+
+<p>JavaScript code is executed after HTML and CSS is inserted into the document.
+If the execution of a code block throws an error, the element and error are
+logged to the console.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>The properties of the object <code>window.liveDemoSettings</code> are used to change
+settings for <em>livedemo</em> if they are set before the <code>DOMContentLoaded</code> event
+occurs and calls <code>window.liveDemo</code>. The properties are:</p>
+
+<ul>
+<li><p><code>HTMLSelector</code>, <code>JSSelector</code>, <code>CSSSelector</code>: Elements matching these CSS
+selectors will be checked for HTMLFlag, CSSFlag and JSFlag respectively. The
+default values are:</p>
+
+<ul>
+<li>HTML:
+<code>&#39;code.language-xml,code.language-html,code.language-markup,code.xml,code.html&#39;</code></li>
+<li>CSS : <code>&#39;code.language-css,code.css&#39;</code></li>
+<li>JS  :<code>&#39;code.language-javascript,code.javascript&#39;</code></li>
+</ul></li>
+<li><p><code>HTMLFlag</code>, <code>CSSFlag</code>, <code>JSFlag</code>: If the <code>textContent</code>s of the
+<code>firstChild</code>ren of the elements matching the respective selectors passes a
+test for this RegExp, they are processed as HTML, CSS or JavaScript. The
+default values are:</p>
+
+<ul>
+<li>HTML: <code>/^&lt;!--.*enable javascript.*--&gt;/</code></li>
+<li>CSS : <code>/^\/\*.*enable javascript.*\*\//</code></li>
+<li>JS  : <code>/^\/\/.*enable javascript.*|^\/\*.*enable javascript.*\*\//</code></li>
+</ul></li>
+<li><p><code>codeElementDepth</code>: How much lower in the DOM tree the <code>&lt;code&gt;</code> elements are
+than the level you want demo HTML <code>div.live-demo</code>s to be inserted. Default
+is <code>2</code> as explained in the &quot;HTML&quot; section of this document.</p></li>
+<li><p><code>insertPosition</code>: The position to insert <code>div.live-demo</code>s relative to the
+element that is <code>codeElementDepth</code> levels up from the <code>&lt;code&gt;</code> element. The
+default value is <code>&#39;afterend&#39;</code>. See <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element.insertAdjacentHTML#Visualization_of_position_names" title="Visualization of position names">Element.insertAdjacentHTML</a>
+for other values.</p></li>
+</ul>
+
+<h2 id="license">License</h2>
+
+<p><a href="http://taye.mit-license.org/" title="copy of the MIT license">MIT</a></p>
+
+</article>
+
+<hr>
+
+
+<div id="related-posts">
+    <h3> You might also like </h3>
+    <ul>
+    
+        <li><a href="/blog/svg/a-guide-to-svg-use-elements">A guide to SVG &lt;use&gt; elements</a></li>
+    
+        <li><a href="/blog/user-interaction/2013/12/02/browser-clipboard-copy-paste.html">How to control what is copy-pasted to/from the clipboard in Chrome, Firefox and Safari</a></li>
+    
+        <li><a href="/blog/interact.js/svg/2014/08/10/creating-animated-interact-js-logo/">Creating the animated interact.js logo in SVG and SMIL</a></li>
+    
+    </ul>
+</div>
+
+
+<script>
+var idcomments_acct = '5b4485e927a92a60756d6eb01be3d7f2';
+var idcomments_post_id;
+var idcomments_post_url;
+</script>
+<span id="IDCommentsPostTitle" style="display:none"></span>
+<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+
+
+          <footer>
+            <img id="footer-me" src="/blog/img/hm-64.png" alt="A self portrait">
+            <div class="contact">
+              <p>
+                Taye - Programmer · Visionary · Delicious
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/taye">github.com/taye</a><br/>
+                dev@taye.me<br/>
+                <a href="https://plus.google.com/107750313581859477605?rel=author">+</a>
+              </p>
+            </div>
+            <a id="cc-license" title="Creative Commons Attribution-ShareAlike" rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">
+                <img src="/blog/img/cc_cc.png" alt="Creative Commons">
+                <img src="/blog/img/cc_by.png" alt="Attribution">
+                <img src="/blog/img/cc_sa.png" alt="ShareAlike">
+            </a>
+          </footer>
+        </div>
+
+
+    <script>
+    if (!/yes|1/.test(navigator.doNotTrack)) {
+        (function(p,r,i,v,a,c,y){p['GoogleAnalyticsObject']=a;p[a]=p[a]||function(){
+        (p[a].q=p[a].q||[]).push(arguments)},p[a].l=1*new Date();c=r.createElement(i),
+        y=r.getElementsByTagName(i)[0];c.async=1;c.src=v;y.parentNode.insertBefore(c,y)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-44445883-2', 'taye.me');
+        ga('send', 'pageview');
+    }
+    </script>
+
+    </body>
+</html>

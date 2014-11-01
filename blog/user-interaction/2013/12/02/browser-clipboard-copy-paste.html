@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>How to control what is copy-pasted to/from the clipboard in Chrome, Firefox and Safari | Taye Adeyemi</title>
+        <meta name="author" content="Taye Adeyemi" />
+        <meta name="keywords" content="clipboard override copy paste javascript" />
+    
+        <meta name="description" content="control what the browser copies and pastes when a user uses keyboard shortcuts or the right-click context menu by changing focus to an element of your choice" />
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml"/>
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/blog/css/syntax.css"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/blog/css/normalize.css"/>
+        <link rel="stylesheet" href="/blog/css/taye.css"/>
+        <link rel="icon" href="/blog/img/hm-64.png"/>
+
+
+
+
+    </head>
+    <body>
+
+        <div class="site">
+          <header>
+              <h1 class="title"><a href="/blog">Here I am</a></h1>
+              <a class="extra" href="/blog">home</a>
+          </header>
+
+          <div class="post-title">
+    <h1> How to control what is copy-pasted to/from the clipboard in Chrome, Firefox and Safari </h1>
+    <p class="meta">
+        02 Dec 2013
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="TayeAdeyemi">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </p>
+</div>
+
+<article class="post">
+    <style type="text/css">
+#rc-target {
+    z-index : 9003;
+    width   : 100px;
+    height  : 100px;
+    margin  : -50px;  /* so it's positioned at its centre */
+    opacity : 0.6;
+    border  : none;
+    padding : 0;
+
+    position: absolute;
+    left    : -1000px;
+    right   : -1000px;
+}
+
+#demo-space {
+    width: 90%;
+    padding: 5%;
+    background-color: #2299ee;
+
+    font-family: sans-serif;
+    font-size: 40px;
+    line-height: 1.4;
+    color: white;
+}
+</style>
+
+<p>You can control what the browser copies and pastes when a user uses keyboard
+shortcuts or the right-click context menu by getting in between the default
+sequence of events and changing focus to an element of your choice so that by
+the time the user input sequence is complete, it will be targeting the element
+and content you choose.</p>
+
+<h2 id="handling-keyboard-shortcuts-(ctrl+c-/-ctrl+v)">Handling keyboard shortcuts (Ctrl+C / Ctrl+V)</h2>
+
+<ol>
+<li><p>Add an event listener for <code>keydown</code> events</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;keydown&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div></li>
+<li><p>In this event listener, check if the [V] key is pressed while [Ctrl] is held
+down (the paste shortcut).</p></li>
+</ol>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript">        <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">===</span> <span class="mi">86</span> <span class="o">&amp;&amp;</span> <span class="nx">event</span><span class="p">.</span><span class="nx">ctrlKey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="err">```</span>
+<span class="mi">3</span><span class="p">.</span> <span class="nx">If</span> <span class="nx">that</span> <span class="nx">is</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">set</span> <span class="nx">focus</span> <span class="nx">to</span> <span class="nx">an</span> <span class="nx">input</span> <span class="nx">element</span> <span class="nx">so</span> <span class="nx">that</span> <span class="nx">a</span> <span class="err">`</span><span class="nx">paste</span><span class="err">`</span> <span class="nx">event</span> <span class="nx">is</span>
+   <span class="nx">fired</span><span class="p">.</span>
+
+   <span class="err">```</span><span class="nx">javascript</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">getElementByid</span><span class="p">(</span><span class="s1">&#39;paste-target&#39;</span><span class="p">).</span><span class="nx">focus</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="err">```</span>
+<span class="mi">4</span><span class="p">.</span> <span class="nx">Otherwise</span> <span class="nx">check</span> <span class="k">if</span> <span class="p">[</span><span class="nx">Ctrl</span><span class="p">]</span> <span class="nx">and</span> <span class="p">[</span><span class="nx">C</span><span class="p">]</span> <span class="nx">or</span> <span class="p">[</span><span class="nx">X</span><span class="p">]</span> <span class="nx">were</span> <span class="nx">pressed</span> <span class="p">(</span><span class="nx">copy</span> <span class="nx">or</span> <span class="nx">cut</span><span class="p">).</span>
+
+    <span class="err">```</span><span class="nx">javascript</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">===</span> <span class="mi">67</span> <span class="o">||</span> <span class="nx">event</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">===</span> <span class="mi">88</span><span class="p">)</span> <span class="p">{</span>
+    <span class="err">```</span>
+<span class="mi">5</span><span class="p">.</span> <span class="nx">If</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">set</span> <span class="nx">focus</span> <span class="nx">to</span> <span class="nx">an</span> <span class="nx">input</span> <span class="nx">element</span> <span class="nx">and</span> <span class="nx">select</span> <span class="nx">the</span> <span class="nx">containted</span> <span class="nx">text</span><span class="p">.</span> <span class="nx">It</span> <span class="nx">is</span>
+   <span class="k">this</span> <span class="nx">text</span> <span class="nx">that</span> <span class="nx">will</span> <span class="nx">be</span> <span class="nx">sent</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">clipboard</span><span class="p">.</span>
+
+    <span class="err">```</span><span class="nx">javascript</span>
+            <span class="kd">var</span> <span class="nx">copyTarget</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementByid</span><span class="p">(</span><span class="s1">&#39;copy-target&#39;</span><span class="p">);</span>
+
+            <span class="nx">copyTarget</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+            <span class="nx">copyTarget</span><span class="p">.</span><span class="nx">select</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="err">```</span>
+<span class="o">&lt;</span><span class="nx">br</span><span class="o">&gt;</span>
+
+<span class="err">##</span> <span class="nx">Handling</span> <span class="nx">right</span><span class="o">-</span><span class="nx">click</span> <span class="nx">context</span> <span class="nx">menu</span> <span class="nx">cut</span><span class="o">/</span><span class="nx">copy</span><span class="o">/</span><span class="nx">paste</span>
+
+<span class="nx">Taking</span> <span class="nx">control</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">context</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">context</span> <span class="nx">menu</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">little</span> <span class="nx">more</span> <span class="nx">tricky</span><span class="p">.</span> <span class="nx">The</span>
+<span class="nx">context</span><span class="o">-</span><span class="nx">menu</span> <span class="nx">is</span> <span class="nx">shown</span> <span class="nx">at</span> <span class="nx">the</span> <span class="nx">end</span> <span class="nx">of</span> <span class="nx">a</span> <span class="nx">right</span><span class="o">-</span><span class="nx">click</span> <span class="nx">and</span> <span class="nx">the</span> <span class="nx">context</span> <span class="nx">is</span> <span class="nx">of</span> <span class="nx">the</span>
+<span class="nx">element</span> <span class="nx">that</span> <span class="nx">the</span> <span class="nx">mouse</span> <span class="nx">was</span> <span class="nx">over</span><span class="p">.</span> <span class="nx">By</span> <span class="nx">placing</span> <span class="nx">an</span> <span class="nx">element</span> <span class="nx">below</span> <span class="nx">the</span> <span class="nx">mouse</span> <span class="nx">between</span>
+<span class="nx">the</span> <span class="err">`</span><span class="nx">mousedown</span><span class="err">`</span> <span class="nx">and</span> <span class="err">`</span><span class="nx">mouseup</span><span class="err">`</span> <span class="nx">events</span><span class="p">,</span> <span class="nx">you</span> <span class="nx">can</span> <span class="nx">set</span> <span class="nx">the</span> <span class="nx">context</span> <span class="nx">to</span> <span class="nx">be</span> <span class="nx">that</span> <span class="nx">of</span> <span class="nx">any</span>
+<span class="nx">clickable</span> <span class="nx">element</span><span class="p">.</span>
+
+<span class="nx">If</span> <span class="k">this</span> <span class="nx">element</span> <span class="nx">is</span> <span class="nx">invisible</span> <span class="nx">then</span> <span class="nx">it</span> <span class="nx">does</span> <span class="nx">not</span> <span class="nx">interrupt</span> <span class="nx">the</span> <span class="nx">user</span><span class="s1">&#39;s workflow.</span>
+
+<span class="s1">1. Style the right click target element so that it is invisible and placed</span>
+<span class="s1">   off-screen.</span>
+
+<span class="s1">   ```css</span>
+<span class="s1">    #rc-target {</span>
+<span class="s1">        z-index : 9003;</span>
+<span class="s1">        width   : 100px;</span>
+<span class="s1">        height  : 100px;</span>
+<span class="s1">        margin  : -50px;  /* so it&#39;</span><span class="nx">s</span> <span class="nx">positioned</span> <span class="nx">at</span> <span class="nx">it</span><span class="s1">&#39;s centre */</span>
+<span class="s1">        opacity : 0;</span>
+<span class="s1">        border  : none;</span>
+<span class="s1">        padding : 0;</span>
+
+<span class="s1">        position: absolute;</span>
+<span class="s1">        left    : -1000px;</span>
+<span class="s1">        right   : -1000px;</span>
+<span class="s1">    }</span>
+<span class="s1">    ```</span>
+<span class="s1">2. Add a `mousedown` event listener that checks for right-clicks</span>
+
+<span class="s1">    ```javascript</span>
+<span class="s1">    document.addEventListener(&#39;</span><span class="nx">mousedown</span><span class="s1">&#39; function (event) {</span>
+<span class="s1">        if (event.button === 2) {</span>
+<span class="s1">    ```</span>
+<span class="s1">3. If the button is the right mouse button, move the input element to the</span>
+<span class="s1">   coordinates of the event</span>
+
+<span class="s1">   ```javascript</span>
+<span class="s1">            var rcTarget = document.getElementByid(&#39;</span><span class="nx">rc</span><span class="o">-</span><span class="nx">target</span><span class="s1">&#39;);</span>
+
+<span class="s1">            rcTarget.style.left = event.pageX;</span>
+<span class="s1">            rcTarget.style.top  = event.pageY;</span>
+<span class="s1">    ```</span>
+<span class="s1">4. Then bring focus to the element and select the text inside it and prevent</span>
+<span class="s1">   the default event behaviour</span>
+
+<span class="s1">   ```javascript</span>
+<span class="s1">            rcTarget.focus();</span>
+<span class="s1">            rcTarget.select();</span>
+
+<span class="s1">            event.preventDefault();</span>
+<span class="s1">        }</span>
+<span class="s1">    });</span>
+<span class="s1">    ```</span>
+<span class="s1">5. Hide the `#rc-target` element on `mousemove`</span>
+
+<span class="s1">    ```javascript</span>
+<span class="s1">    document.addEventListener(&#39;</span><span class="nx">mousemove</span><span class="s1">&#39;, function (event) {</span>
+<span class="s1">        var rcTarget = document.getElementById(&#39;</span><span class="nx">rc</span><span class="o">-</span><span class="nx">target</span><span class="s1">&#39;);</span>
+
+<span class="s1">        rcTarget.style.left = rcTarget.style.top = &#39;&#39;;</span>
+<span class="s1">    });</span>
+<span class="s1">    ```</span>
+
+<span class="s1">After mouseup, the context menu will be displayed for the `#rc-target` element.</span>
+<span class="s1">If the user clicks cut/copy/paste, it will relate to the text within the</span>
+<span class="s1">element.</span>
+
+<span class="s1">This way, you can have the user copy and paste whatever data you choose from</span>
+<span class="s1">anywhere in your web page/app.</span>
+
+<span class="s1">&lt;div id=&quot;demo-space&quot;&gt;</span>
+<span class="s1">    Try right-clicking here to see this working</span>
+<span class="s1">&lt;/div&gt;</span>
+<span class="s1">&lt;input id=&quot;rc-target&quot; type=&quot;text&quot;&gt;</span>
+
+<span class="s1">&lt;script&gt;</span>
+<span class="s1">// an input element which the paste/copy will target</span>
+<span class="s1">var rcTarget = document.getElementById(&#39;</span><span class="nx">rc</span><span class="o">-</span><span class="nx">target</span><span class="s1">&#39;),</span>
+<span class="s1">    demoSpace = document.getElementById(&#39;</span><span class="nx">demo</span><span class="o">-</span><span class="nx">space</span><span class="s1">&#39;),</span>
+<span class="s1">    index = 0;</span>
+
+<span class="s1">rcTarget.value = &#39;</span><span class="nx">text</span> <span class="nx">inside</span> <span class="nx">textbox</span><span class="s1">&#39;;</span>
+
+<span class="s1">demoSpace.onmousedown = function (event) {</span>
+<span class="s1">    // if it&#39;</span><span class="nx">s</span> <span class="nx">a</span> <span class="nx">right</span><span class="o">-</span><span class="nx">click</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">button</span> <span class="o">===</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// change the value of the input element</span>
+        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Apples&#39;</span><span class="p">,</span> <span class="s1">&#39;Mele&#39;</span><span class="p">,</span> <span class="s1">&#39;Pommes&#39;</span><span class="p">,</span> <span class="s1">&#39;Úlla&#39;</span><span class="p">][(</span><span class="nx">index</span><span class="o">++</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">];</span>
+        <span class="c1">// focus and position the input element to be below the cursor</span>
+        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pageX</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span>  <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pageY</span> <span class="o">+</span> <span class="s1">&#39;px&#39;</span><span class="p">;</span>
+
+        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">focus</span><span class="p">();</span>
+        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">select</span><span class="p">();</span>
+
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="c1">// When the mouse goes up, the browser context menu is shown for the input element</span>
+    <span class="c1">// and the user can copy/paste the input element text using the browser UI</span>
+<span class="p">}</span>
+<span class="o">&lt;</span><span class="err">/script&gt;</span>
+</code></pre></div>
+
+</article>
+
+<hr>
+
+
+<div id="related-posts">
+    <h3> You might also like </h3>
+    <ul>
+    
+        <li><a href="/blog/javascript/2014/03/11/introducing-livedemo/">Simple web demos with livedemo</a></li>
+    
+        <li><a href="/blog/svg/a-guide-to-svg-use-elements">A guide to SVG &lt;use&gt; elements</a></li>
+    
+        <li><a href="/blog/interact-js/2013/10/28/how-to-elastic-overscroll-1.html">Implementing elastic overscroll in JavaScript [Part 1]</a></li>
+    
+    </ul>
+</div>
+
+
+<script>
+var idcomments_acct = '5b4485e927a92a60756d6eb01be3d7f2';
+var idcomments_post_id;
+var idcomments_post_url;
+</script>
+<span id="IDCommentsPostTitle" style="display:none"></span>
+<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+
+
+          <footer>
+            <img id="footer-me" src="/blog/img/hm-64.png" alt="A self portrait">
+            <div class="contact">
+              <p>
+                Taye - Programmer · Visionary · Delicious
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/taye">github.com/taye</a><br/>
+                dev@taye.me<br/>
+                <a href="https://plus.google.com/107750313581859477605?rel=author">+</a>
+              </p>
+            </div>
+            <a id="cc-license" title="Creative Commons Attribution-ShareAlike" rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">
+                <img src="/blog/img/cc_cc.png" alt="Creative Commons">
+                <img src="/blog/img/cc_by.png" alt="Attribution">
+                <img src="/blog/img/cc_sa.png" alt="ShareAlike">
+            </a>
+          </footer>
+        </div>
+
+
+    <script>
+    if (!/yes|1/.test(navigator.doNotTrack)) {
+        (function(p,r,i,v,a,c,y){p['GoogleAnalyticsObject']=a;p[a]=p[a]||function(){
+        (p[a].q=p[a].q||[]).push(arguments)},p[a].l=1*new Date();c=r.createElement(i),
+        y=r.getElementsByTagName(i)[0];c.async=1;c.src=v;y.parentNode.insertBefore(c,y)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-44445883-2', 'taye.me');
+        ga('send', 'pageview');
+    }
+    </script>
+
+    </body>
+</html>

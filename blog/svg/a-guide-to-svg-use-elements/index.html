@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>A guide to SVG &lt;use&gt; elements | Taye Adeyemi</title>
+        <meta name="author" content="Taye Adeyemi" />
+        <meta name="keywords" content="svg use use element xlink xlink:href namespaces javascript graphics" />
+    
+        <meta name="description" content="SVG <use> elements allow you to duplicate and re-use graphical SVG elements including <g>, <svg> and <symbol> elements as well as other <use> elements. With them, you can craft SVG documents with a DRY kind of approach." />
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml"/>
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/blog/css/syntax.css"/>
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/blog/css/normalize.css"/>
+        <link rel="stylesheet" href="/blog/css/taye.css"/>
+        <link rel="icon" href="/blog/img/hm-64.png"/>
+
+
+
+        <script src="/blog/js/livedemo.js"></script>
+
+    </head>
+    <body>
+
+        <div class="site">
+          <header>
+              <h1 class="title"><a href="/blog">Here I am</a></h1>
+              <a class="extra" href="/blog">home</a>
+          </header>
+
+          <div class="post-title">
+    <h1> A guide to SVG &lt;use&gt; elements </h1>
+    <p class="meta">
+        04 Jan 2014
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="TayeAdeyemi">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </p>
+</div>
+
+<article class="post">
+    <style>
+svg {
+    width: 100%;
+    height: 25%;
+    background-color: rgba(34, 153, 238, 0.2);
+}
+svg use {
+    pointer-events: none;
+}
+</style>
+
+<p>SVG <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use" title="use - SVG | MDN"><code>&lt;use&gt;</code></a> elements allow you to duplicate and re-use graphical SVG elements
+including <code>&lt;g&gt;</code>, <code>&lt;svg&gt;</code> and <code>&lt;symbol&gt;</code> elements as well as other <code>&lt;use&gt;</code>
+elements.  With them, you can craft SVG documents with a
+<a href="http://en.wikipedia.org/wiki/Don&#x27;t_repeat_yourself" title="Don&#39;t Repeat Yourself">DRY</a> kind of approach.</p>
+
+<p>Below is an example of simple SVG in an HTML document. When written inline in
+HTML5, there is no need to specify the svg namespace
+<code>xmlns=&quot;http://www.w3.org/2000/svg&quot;</code> or xlink namespace
+<code>xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;</code> attributes.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rect</span>
+        <span class="na">x=</span><span class="s">&quot;100&quot;</span> <span class="na">y=</span><span class="s">&quot;20&quot;</span>
+        <span class="na">width=</span><span class="s">&quot;50&quot;</span> <span class="na">height=</span><span class="s">&quot;50&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;rect</span>
+        <span class="na">x=</span><span class="s">&quot;250&quot;</span> <span class="na">y=</span><span class="s">&quot;30&quot;</span>
+        <span class="na">width=</span><span class="s">&quot;50&quot;</span> <span class="na">height=</span><span class="s">&quot;50&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<p>Apart from the x/y attributes the two <code>&lt;rect&gt;</code>s are identical. So instead of
+repeating code, we can write out only one of the <code>&lt;rect&gt;</code>s and duplicate it
+with a <code>&lt;use&gt;</code> element which has a different position.</p>
+
+<p>To do this, we must:</p>
+
+<ul>
+<li>give the first <code>&lt;rect&gt;</code> an ID then we</li>
+<li>replace the second with a <code>&lt;use&gt;</code> and</li>
+<li>give it an <code>xlink:href</code> attribute with a value of <code>&quot;#[reference element
+ID]&quot;</code>.</li>
+</ul>
+
+<p>The result is two identical elements in the exact same position. To change the
+position of a <code>&lt;use&gt;</code> element, we can use the <code>x</code> and <code>y</code> attributes or the
+<code>transform</code> attribute.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;rect</span> <span class="na">id=</span><span class="s">&quot;original-rect&quot;</span>
+        <span class="na">x=</span><span class="s">&quot;100&quot;</span> <span class="na">y=</span><span class="s">&quot;20&quot;</span>
+        <span class="na">width=</span><span class="s">&quot;50&quot;</span> <span class="na">height=</span><span class="s">&quot;50&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#original-rect&quot;</span> <span class="na">x=</span><span class="s">&quot;150&quot;</span> <span class="na">y=</span><span class="s">&quot;10&quot;</span> <span class="nt">/&gt;</span>
+        <span class="c">&lt;!-- x/y of the &lt;use&gt; element</span>
+<span class="c">             are added to x/y of the referenced &lt;rect&gt; --&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<p>The resulting image is identical to that of the previous example, but requires less
+code.</p>
+
+<h2 id="improvements">Improvements</h2>
+
+<p>The reference would be much more convenient to use if it&#39;s center were always
+at the coordinates of it&#39;s duplicates so that if you wanted a rectange centered
+at <code>(200, 50)</code> you would simply write:</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#original-rect&quot;</span> <span class="na">x=</span><span class="s">&quot;200&quot;</span> <span class="na">y=</span><span class="s">&quot;50&quot;</span> <span class="nt">/&gt;</span>
+<span class="c">&lt;!-- or --&gt;</span>
+<span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#original-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(200 50)&quot;</span> <span class="nt">/&gt;</span>
+<span class="c">&lt;!-- using `transform` to position the element</span>
+<span class="c">     makes combining animations a lot easier --&gt;</span>
+</code></pre></div>
+
+<p>We can do this by moving the reference element into a <code>&lt;defs&gt;</code> element and
+positioning it so that it center is at <code>(0, 0)</code>. All elements in <code>&lt;defs&gt;</code>
+elements are not rendered unless they are referenced by another visible
+element.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- list resourses in a &lt;defs&gt; element --&gt;</span>
+    <span class="nt">&lt;defs&gt;</span>
+        <span class="nt">&lt;rect</span> <span class="na">id=</span><span class="s">&quot;def-rect&quot;</span>
+            <span class="na">x=</span><span class="s">&quot;-25&quot;</span> <span class="na">y=</span><span class="s">&quot;-25&quot;</span>
+            <span class="na">width=</span><span class="s">&quot;50&quot;</span> <span class="na">height=</span><span class="s">&quot;50&quot;</span>
+            <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/defs&gt;</span>
+
+    <span class="c">&lt;!-- reference resourses by ID in xlink:href attribute --&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(100 50)&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(200 50)&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(300 50)&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<h2 id="property-inheritance">Property Inheritance</h2>
+
+<p>If a property like <code>fill</code>, <code>stroke</code>, <code>stroke-width</code>, etc. isn&#39;t specidied in
+the original element, then it can be inherited from the <code>&lt;use&gt;</code> element as if
+it were a <code>&lt;g&gt;</code>. For example, we can&#39;t change the fill color of elements using
+<code>#def-rect</code> by setting <code>fill</code> of the <code>&lt;use&gt;</code> element (since the attribute is
+already set in the reference element) but we can set the stroke style since
+that wasn&#39;t set in <code>#def-rect</code>.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(100 50)&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;red&quot;</span>
+        <span class="na">stroke=</span><span class="s">&quot;black&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(200 50)&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;red&quot;</span>
+        <span class="na">stroke=</span><span class="s">&quot;black&quot;</span> <span class="na">stroke-width=</span><span class="s">&quot;8&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#def-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(300 50)&quot;</span>
+        <span class="na">fill=</span><span class="s">&quot;red&quot;</span>
+        <span class="na">stroke=</span><span class="s">&quot;black&quot;</span> <span class="na">stroke-width=</span><span class="s">&quot;8&quot;</span> <span class="na">stroke-linejoin=</span><span class="s">&quot;round&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<h2 id="animations">Animations</h2>
+
+<p>Animations that are applied to the reference element are also observed in the
+duplicates. (Note that SMIL animations are not supported by Internet Explorer.)</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;defs&gt;</span>
+        <span class="nt">&lt;rect</span> <span class="na">id=</span><span class="s">&quot;anim-rect&quot;</span>
+            <span class="na">x=</span><span class="s">&quot;-25&quot;</span> <span class="na">y=</span><span class="s">&quot;-25&quot;</span>
+            <span class="na">width=</span><span class="s">&quot;50&quot;</span> <span class="na">height=</span><span class="s">&quot;50&quot;</span>
+            <span class="na">fill=</span><span class="s">&quot;#29e&quot;</span> <span class="nt">&gt;</span>
+
+            <span class="nt">&lt;animate</span>
+                <span class="na">attributeName=</span><span class="s">&quot;fill&quot;</span>
+                <span class="na">values=</span><span class="s">&quot;#29e; #4e4; #f40; #29e&quot;</span>
+                <span class="na">dur=</span><span class="s">&quot;6s&quot;</span>
+                <span class="na">repeatCount=</span><span class="s">&quot;indefinite&quot;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/rect&gt;</span>
+    <span class="nt">&lt;/defs&gt;</span>
+
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(100 50)&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(200 50)&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(300 50)&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<p>Animations can also be added to each <code>&lt;use&gt;</code> element.</p>
+
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- enable javascript to view a demo --&gt;</span>
+<span class="nt">&lt;svg</span> <span class="na">viewBox=</span><span class="s">&quot;0 0 400 100&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(100 50)&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;animateTransform</span>
+            <span class="na">attributeName=</span><span class="s">&quot;transform&quot;</span> <span class="na">type=</span><span class="s">&quot;rotate&quot;</span>
+            <span class="na">values=</span><span class="s">&quot;0 0 0; 360 0 0&quot;</span>
+            <span class="na">additive=</span><span class="s">&quot;sum&quot;</span>
+            <span class="na">dur=</span><span class="s">&quot;6s&quot;</span>
+            <span class="na">repeatCount=</span><span class="s">&quot;indefinite&quot;</span> <span class="nt">/&gt;</span> <span class="nt">&lt;/use&gt;</span>
+
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(200 50)&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;animateTransform</span>
+            <span class="na">attributeName=</span><span class="s">&quot;transform&quot;</span> <span class="na">type=</span><span class="s">&quot;scale&quot;</span>
+            <span class="na">values=</span><span class="s">&quot;0.5; 1.5; 0.5&quot;</span>
+            <span class="na">additive=</span><span class="s">&quot;sum&quot;</span>
+            <span class="na">dur=</span><span class="s">&quot;3s&quot;</span>
+            <span class="na">repeatCount=</span><span class="s">&quot;indefinite&quot;</span> <span class="nt">/&gt;</span> <span class="nt">&lt;/use&gt;</span>
+
+    <span class="nt">&lt;use</span> <span class="na">xlink:href=</span><span class="s">&quot;#anim-rect&quot;</span> <span class="na">transform=</span><span class="s">&quot;translate(300 50)&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;animateTransform</span>
+            <span class="na">attributeName=</span><span class="s">&quot;transform&quot;</span> <span class="na">type=</span><span class="s">&quot;translate&quot;</span>
+            <span class="na">values=</span><span class="s">&quot;-12.5 -12.5;</span>
+<span class="s">                     12.5 -12.5;</span>
+<span class="s">                     12.5  12.5;</span>
+<span class="s">                    -12.5  12.5;</span>
+<span class="s">                    -12.5 -12.5&quot;</span>
+            <span class="na">additive=</span><span class="s">&quot;sum&quot;</span>
+            <span class="na">dur=</span><span class="s">&quot;3s&quot;</span>
+            <span class="na">repeatCount=</span><span class="s">&quot;indefinite&quot;</span> <span class="nt">/&gt;</span> <span class="nt">&lt;/use&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div>
+
+<h2 id="dynamic-&lt;use&gt;-with-javscript">Dynamic <code>&lt;use&gt;</code> with javscript</h2>
+
+<p>To create a <code>&lt;use&gt;</code> element with javascript, as with any SVGElement, we use
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/document.createElementNS" title="document.createElementNS - Web API Interfaces | MDN"><code>document.createElementNS</code></a> which takes an xml
+namespace URI and element nodeName strings.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">useElement</span> <span class="o">=</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="s1">&#39;http://www.w3.org/2000/svg&#39;</span><span class="p">,</span> <span class="s1">&#39;use&#39;</span><span class="p">);</span>
+
+<span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">).</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">useElement</span><span class="p">);</span>
+</code></pre></div>
+
+<p>To set the <code>xlink:href</code> attribute, we use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element.setAttributeNS" title="Element.setAttributeNS - Web API Interfaces | MDN"><code>Element.setAttributeNS</code></a> which takes
+the namespace, the attribute name and the attribute value. In this
+case, the namespace is <code>xlink</code> the URI of which is
+<code>http://www.w3.org/1999/xlink</code>.</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">useElement</span><span class="p">.</span><span class="nx">setAttributeNS</span><span class="p">(</span>
+        <span class="s1">&#39;http://www.w3.org/1999/xlink&#39;</span><span class="p">,</span> <span class="c1">// xlink NS URI</span>
+        <span class="s1">&#39;href&#39;</span><span class="p">,</span>                         <span class="c1">// attribute (no &#39;xlink:&#39;)</span>
+        <span class="s1">&#39;#anim-rect&#39;</span><span class="p">);</span>                  <span class="c1">// value to set</span>
+</code></pre></div>
+
+</article>
+
+<hr>
+
+
+<div id="related-posts">
+    <h3> You might also like </h3>
+    <ul>
+    
+        <li><a href="/blog/javascript/2014/03/11/introducing-livedemo/">Simple web demos with livedemo</a></li>
+    
+        <li><a href="/blog/user-interaction/2013/12/02/browser-clipboard-copy-paste.html">How to control what is copy-pasted to/from the clipboard in Chrome, Firefox and Safari</a></li>
+    
+        <li><a href="/blog/interact.js/svg/2014/08/10/creating-animated-interact-js-logo/">Creating the animated interact.js logo in SVG and SMIL</a></li>
+    
+    </ul>
+</div>
+
+
+<script>
+var idcomments_acct = '5b4485e927a92a60756d6eb01be3d7f2';
+var idcomments_post_id;
+var idcomments_post_url;
+</script>
+<span id="IDCommentsPostTitle" style="display:none"></span>
+<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+
+
+          <footer>
+            <img id="footer-me" src="/blog/img/hm-64.png" alt="A self portrait">
+            <div class="contact">
+              <p>
+                Taye - Programmer · Visionary · Delicious
+              </p>
+            </div>
+            <div class="contact">
+              <p>
+                <a href="https://github.com/taye">github.com/taye</a><br/>
+                dev@taye.me<br/>
+                <a href="https://plus.google.com/107750313581859477605?rel=author">+</a>
+              </p>
+            </div>
+            <a id="cc-license" title="Creative Commons Attribution-ShareAlike" rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">
+                <img src="/blog/img/cc_cc.png" alt="Creative Commons">
+                <img src="/blog/img/cc_by.png" alt="Attribution">
+                <img src="/blog/img/cc_sa.png" alt="ShareAlike">
+            </a>
+          </footer>
+        </div>
+
+
+    <script>
+    if (!/yes|1/.test(navigator.doNotTrack)) {
+        (function(p,r,i,v,a,c,y){p['GoogleAnalyticsObject']=a;p[a]=p[a]||function(){
+        (p[a].q=p[a].q||[]).push(arguments)},p[a].l=1*new Date();c=r.createElement(i),
+        y=r.getElementsByTagName(i)[0];c.async=1;c.src=v;y.parentNode.insertBefore(c,y)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-44445883-2', 'taye.me');
+        ga('send', 'pageview');
+    }
+    </script>
+
+    </body>
+</html>
