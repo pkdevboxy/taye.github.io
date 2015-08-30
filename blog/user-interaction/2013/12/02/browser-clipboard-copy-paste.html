@@ -120,19 +120,19 @@ clickable element.</p>
 
 <p>Style the right click target element so that it is invisible and placed
 off-screen.</p>
-<div class="highlight"><pre><code class="language-css" data-lang="css">    <span class="nf">#rc-target</span> <span class="p">{</span>
-        <span class="k">z-index</span> <span class="o">:</span> <span class="m">9003</span><span class="p">;</span>
-        <span class="k">width</span>   <span class="o">:</span> <span class="m">100px</span><span class="p">;</span>
-        <span class="k">height</span>  <span class="o">:</span> <span class="m">100px</span><span class="p">;</span>
-        <span class="k">margin</span>  <span class="o">:</span> <span class="m">-50px</span><span class="p">;</span>  <span class="c">/* so it&#39;s positioned at it&#39;s centre */</span>
-        <span class="k">opacity</span> <span class="o">:</span> <span class="m">0</span><span class="p">;</span>
-        <span class="k">border</span>  <span class="o">:</span> <span class="k">none</span><span class="p">;</span>
-        <span class="k">padding</span> <span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nf">#rc-target</span> <span class="p">{</span>
+    <span class="k">z-index</span> <span class="o">:</span> <span class="m">9003</span><span class="p">;</span>
+    <span class="k">width</span>   <span class="o">:</span> <span class="m">100px</span><span class="p">;</span>
+    <span class="k">height</span>  <span class="o">:</span> <span class="m">100px</span><span class="p">;</span>
+    <span class="k">margin</span>  <span class="o">:</span> <span class="m">-50px</span><span class="p">;</span>  <span class="c">/* so it&#39;s positioned at it&#39;s centre */</span>
+    <span class="k">opacity</span> <span class="o">:</span> <span class="m">0</span><span class="p">;</span>
+    <span class="k">border</span>  <span class="o">:</span> <span class="k">none</span><span class="p">;</span>
+    <span class="k">padding</span> <span class="o">:</span> <span class="m">0</span><span class="p">;</span>
 
-        <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span>
-        <span class="k">left</span>    <span class="o">:</span> <span class="m">-1000px</span><span class="p">;</span>
-        <span class="k">right</span>   <span class="o">:</span> <span class="m">-1000px</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span class="k">position</span><span class="o">:</span> <span class="k">absolute</span><span class="p">;</span>
+    <span class="k">left</span>    <span class="o">:</span> <span class="m">-1000px</span><span class="p">;</span>
+    <span class="k">right</span>   <span class="o">:</span> <span class="m">-1000px</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div>
 <p>Add a <code>mousedown</code> event listener that checks for right-clicks</p>
 <div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;mousedown&#39;</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
@@ -156,11 +156,11 @@ off-screen.</p>
 <span class="p">});</span>
 
 <span class="c1">// Hide the `#rc-target` element on `mousemove`</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;mousemove&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">rcTarget</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;rc-target&#39;</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;mousemove&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">rcTarget</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;rc-target&#39;</span><span class="p">);</span>
 
-        <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-    <span class="p">});</span>
+    <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">rcTarget</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+<span class="p">});</span>
 </code></pre></div>
 <p>After mouseup, the context menu will be displayed for the <code>#rc-target</code> element.
 If the user clicks cut/copy/paste, it will relate to the text within the
