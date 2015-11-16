@@ -2,11 +2,11 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Hey web-devs, stop listening for EITHER touch or mouse events! | Taye Adeyemi</title>
+        <title>Receiving mousemove events outside dragged iframe | Taye Adeyemi</title>
         <meta name="author" content="Taye Adeyemi" />
-        <meta name="keywords" content="rant touchscreen touch mouse javascript HTML5 events" />
+        <meta name="keywords" content="mouse events preventDefault iframe" />
     
-        <meta name="description" content="Seriously. It's annoying. Some devices have a touchscreen and mouse/trackpad." />
+        <meta name="description" content="Don't call preventDefault on the mousedown event" />
     
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -33,33 +33,27 @@
           </header>
 
           <div class="post-title">
-    <h1> Hey web-devs, stop listening for EITHER touch or mouse events! </h1>
+    <h1> Receiving mousemove events outside dragged iframe </h1>
     <p class="meta">
-        02 Oct 2013
+        16 Nov 2015
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="TayeAdeyemi">Tweet</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </p>
 </div>
 
 <article class="post">
-    <p>Seriously. It&#39;s annoying. Some devices have a touchscreen <em>and</em> mouse/trackpad.
-When you do somehting like</p>
+    <p>You have an iframe that contains draggable elements. You want dragging of these
+elements to continue even if the mouse pointer moves outside the iframe and
+over the parent document. You want the dragging to end when the mouse is
+released while the pointer is outside the iframe. You could try adding event
+listeners to the parent document, but that&#39;s not possible when the two
+documents have differnt origins. What do you do?</p>
 
-<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="s1">&#39;createTouch&#39;</span> <span class="k">in</span> <span class="nb">document</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">element</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;touchstart&#39;</span><span class="p">,</span> <span class="nx">clickListener</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="k">else</span> <span class="p">{</span>
-    <span class="nx">element</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="nx">clickListener</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>Don&#39;t call <code>preventDefault</code> on the <code>mousedown</code> event.</p>
 
-<p>I start disliking you. It&#39;s nothing personal, but you&#39;ve just forced me to use the
-touchscreen of my laptop to interact with your website even if I prefer to use
-the trackpad or a connected mouse.</p>
-
-<p>When I made the prototype for interact.js, I was guilty of doing
-<a href="https://github.com/taye/interact.js/blob/8e6a7e8/interact.js#L15-25">the same thing</a>. However, I knew it was the wrong way to go about
-supporting touch events and I <a href="https://github.com/taye/interact.js/commit/62efd5b">eventually fixed</a> it.</p>
+<p>If the default behaviour isn&#39;t prevented on <code>mousedown</code>, then when the mouse is
+moved outside the iframe and over the parent document, the document in the
+iframe will continue to recieve <code>mousemove</code> events.</p>
 
 </article>
 
@@ -70,11 +64,11 @@ supporting touch events and I <a href="https://github.com/taye/interact.js/commi
     <h3> You might also like </h3>
     <ul>
     
-        <li><a href="/blog/interact.js/svg/2014/08/10/creating-animated-interact-js-logo/">Creating the animated interact.js logo in SVG and SMIL</a></li>
+        <li><a href="/blog/javascript/2014/03/11/introducing-livedemo/">Simple web demos with livedemo</a></li>
     
         <li><a href="/blog/user-interaction/2013/12/02/browser-clipboard-copy-paste.html">How to control what is copy-pasted to/from the clipboard in Chrome, Firefox and Safari</a></li>
     
-        <li><a href="/blog/interact-js/2013/10/28/how-to-elastic-overscroll-1.html">Implementing elastic overscroll in JavaScript [Part 1]</a></li>
+        <li><a href="/blog/svg/a-guide-to-svg-use-elements">A guide to SVG &lt;use&gt; elements</a></li>
     
     </ul>
 </div>
